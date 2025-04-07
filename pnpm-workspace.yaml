@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+onlyBuiltDependencies:
+  - '@julusian/midi'
+  - '@serialport/bindings-cpp'
+  - esbuild

@@ -1,0 +1,37 @@
+{
+  "name": "@smartosc/core",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "build-start": "tsc && node ./dist/core/src/index.js",
+    "start": "node ./dist/core/src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.2",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.10",
+    "@types/node-osc": "^9.1.0",
+    "@types/node-windows": "^0.1.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "easymidi": "^3.1.0",
+    "express": "^4.21.2",
+    "node-osc": "^9.1.4",
+    "node-systray-v2": "github:Edgar-P-yan/node-systray-v2",
+    "node-windows": "1.0.0-beta.8",
+    "open": "^10.1.0",
+    "osc": "^2.4.5",
+    "socket.io": "^4.8.1"
+  }
+}

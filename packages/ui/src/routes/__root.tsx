@@ -1,0 +1,122 @@
+import { createRootRoute, Link, Outlet, useLocation } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { ModeToggle } from '@/components/mode-toggle.tsx'
+import { Home, Settings, SlidersVertical, Terminal } from 'lucide-react'
+import { Button } from '@/components/ui/button.tsx'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb.tsx'
+import { ThemeProvider } from '@/components/theme-provider.tsx'
+import React, { useEffect } from 'react'
+import { getId } from '@/lib/utils.ts'
+import { socket } from '@/socket.ts'
+import ConnectionState from '@/components/connection-state.tsx'
+import ErrorToast, { Toaster } from '@/components/ui/sonner.tsx'
+import { toast } from 'sonner'
+
+export const Route = createRootRoute({
+  component: Root,
+})
+
+function Root() {
+  const location = useLocation()
+
+  useEffect(() => {
+    function onErrorToast(error: Error) {
+      toast.custom(t => (
+        <ErrorToast t={t}>
+          {error.name}: {error.message}
+        </ErrorToast>
+      ))
+    }
+
+    socket.on('t-error', onErrorToast)
+    socket.on('exit', () => window.open('', '_self', '').close())
+
+    return () => {
+      socket.off('t-error', onErrorToast)
+    }
+  }, [])
+
+  return (
+    <ThemeProvider>
+      <Toaster />
+      <div className="flex h-dvh flex-col">
+        <header className="h-15 relative flex gap-2 border-b p-4">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <Link to="/">
+                <BreadcrumbItem>
+                  <h1 className="font-display text-foreground text-lg font-black">SmartOSC</h1>
+                  <p className="text-muted-foreground text-sm font-medium">v0.1</p>
+                </BreadcrumbItem>
+              </Link>
+              {location.pathname
+                .split('/')
+                .slice(1)
+                .map(segment =>
+                  segment ? (
+                    <React.Fragment key={getId()}>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem key={segment}>{segment}</BreadcrumbItem>
+                    </React.Fragment>
+                  ) : (
+                    ''
+                  ),
+                )}
+            </BreadcrumbList>
+          </Breadcrumb>
+          <ConnectionState />
+        </header>
+        <div className="flex h-full">
+          <nav className="w-13 flex grow-0 flex-col border-r p-2">
+            <ul className="space-y-2">
+              <li>
+                <Link to="/">
+                  {({ isActive }) => (
+                    <Button size="icon" variant={isActive ? 'secondary' : 'outline'}>
+                      <Home />
+                    </Button>
+                  )}
+                </Link>
+              </li>
+              <li>
+                <Link to="/fader-config">
+                  {({ isActive }) => (
+                    <Button size="icon" variant={isActive ? 'secondary' : 'outline'}>
+                      <SlidersVertical />
+                    </Button>
+                  )}
+                </Link>
+              </li>
+              <li>
+                <Link to="/settings">
+                  {({ isActive }) => (
+                    <Button size="icon" variant={isActive ? 'secondary' : 'outline'}>
+                      <Settings />
+                    </Button>
+                  )}
+                </Link>
+              </li>
+              <li>
+                <Link to="/console">
+                  {({ isActive }) => (
+                    <Button size="icon" variant={isActive ? 'secondary' : 'outline'}>
+                      <Terminal />
+                    </Button>
+                  )}
+                </Link>
+              </li>
+            </ul>
+
+            <div className="mt-auto">
+              <ModeToggle />
+            </div>
+          </nav>
+          <main className="grow">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+      <TanStackRouterDevtools position="bottom-right" />
+    </ThemeProvider>
+  )
+}
