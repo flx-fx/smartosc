@@ -49,7 +49,7 @@ export type FaderProfile = {
   faders: Fader[]
 }
 
-export type LogType = 'log' | 'info' | 'warn' | 'error' | 'TCP' | 'MIDI'
+export type LogType = 'log' | 'warn' | 'error' | 'OSC' | 'MIDI'
 
 export type Theme = 'dark' | 'light' | 'system'
 

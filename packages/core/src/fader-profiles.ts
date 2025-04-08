@@ -68,31 +68,22 @@ function createFaderProfile(name = 'New Profile', numFGs = 0, numFs = 0): FaderP
 }
 
 function getFaderProfile(profileId?: Id) {
-  log('Getting fader profile...')
   const fpId = profileId ? profileId : config.app.faderProfileId
 
   if (faderProfiles.has(fpId)) {
-    log(`Fader profile found: ${fpId}`)
     return faderProfiles.get(fpId)
   }
 }
 
 function getFaderGroups() {
-  log('Getting fader groups...')
-  const faderGroups = getFaderProfile()?.faderGroups ?? []
-  log(`Fader groups: ${JSON.stringify(faderGroups)}`)
-  return faderGroups
+  return getFaderProfile()?.faderGroups ?? []
 }
 
 function getFaders() {
-  log('Getting faders...')
-  const faders = getFaderProfile()?.faders ?? []
-  log(`Faders: ${JSON.stringify(faders)}`)
-  return faders
+  return getFaderProfile()?.faders ?? []
 }
 
 function setFaderProfile(newFaderProfile: FaderProfile | ((fp: FaderProfile) => FaderProfile), profileId?: Id) {
-  log('Setting fader profile...')
   const fpId = profileId ? profileId : config.app.faderProfileId
 
   if (typeof newFaderProfile === 'function') {
@@ -100,36 +91,29 @@ function setFaderProfile(newFaderProfile: FaderProfile | ((fp: FaderProfile) => 
     if (existingProfile) {
       const updatedProfile = newFaderProfile(existingProfile)
       faderProfiles.set(fpId, updatedProfile)
-      log(`Updated fader profile: ${JSON.stringify(updatedProfile)}`)
     } else {
-      log(`Fader profile not found: ${fpId}`, 'error')
+      log(`setFaderProfile: Fader profile not found: ${fpId}`, 'error')
     }
   } else {
     faderProfiles.set(fpId, newFaderProfile)
-    log(`Set fader profile: ${JSON.stringify(newFaderProfile)}`)
   }
 }
 
 function setFaderGroups(newFaderGroups: FaderGroup[] | ((fgs: FaderGroup[]) => FaderGroup[])) {
-  log('Setting fader groups...')
   setFaderProfile(fp => {
     fp.faderGroups = typeof newFaderGroups === 'function' ? newFaderGroups(fp.faderGroups) : newFaderGroups
-    log(`Updated fader groups: ${JSON.stringify(fp.faderGroups)}`)
     return fp
   })
 }
 
 function setFaders(newFaders: Fader[] | ((fs: Fader[]) => Fader[]), profileId?: Id) {
-  log('Setting faders...')
   setFaderProfile(fp => {
     fp.faders = typeof newFaders === 'function' ? newFaders(fp.faders) : newFaders
-    log(`Updated faders: ${JSON.stringify(fp.faders)}`)
     return fp
   }, profileId)
 }
 
 function writeFaderProfiles() {
-  log('Writing fader profiles...')
   try {
     faderProfiles.forEach(fp => {
       fs.writeFileSync(path.join(faderProfilesPath, `${fp.id}.json`), JSON.stringify(fp, null, 2))
@@ -141,15 +125,14 @@ function writeFaderProfiles() {
 }
 
 function isFaderProfile(obj: any): obj is FaderProfile {
-  const isValid =
+  return (
     typeof obj === 'object' &&
     obj !== null &&
     (typeof obj.id === 'string' || typeof obj.id === 'number') &&
     typeof obj.name === 'string' &&
     Array.isArray(obj.faderGroups) &&
     Array.isArray(obj.faders)
-  log(`Is fader profile: ${isValid}`)
-  return isValid
+  )
 }
 
 export {

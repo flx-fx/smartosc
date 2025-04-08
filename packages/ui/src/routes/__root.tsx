@@ -122,7 +122,7 @@ function Root() {
           </nav>
           <main className="h-[calc(100dvh-var(--spacing)*15)] grow">
             {!socketConnection ? (
-              <div className="bg-background/50 absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center p-8 backdrop-blur-lg">
+              <div className="bg-background/70 absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center p-8 backdrop-blur-lg">
                 <Alert
                   variant="destructive"
                   className="w-192 min-w-fit max-w-full border-rose-500 bg-rose-500/20 text-rose-500"
@@ -134,7 +134,7 @@ function Root() {
               </div>
             ) : (
               !config && (
-                <div className="bg-background/50 absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center p-8 backdrop-blur-lg">
+                <div className="bg-background/70 absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center p-8 backdrop-blur-lg">
                   <Alert
                     variant="destructive"
                     className="w-192 min-w-fit max-w-full border-rose-500 bg-rose-500/20 text-rose-500"

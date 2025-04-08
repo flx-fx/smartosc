@@ -11,21 +11,18 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-function log(message: string, type?: LogType) {
-  switch (type) {
-    case undefined:
-    case 'log':
-    case 'TCP':
-    case 'MIDI':
-      console.log(`[${type}]`, message)
-      break
-    case 'error':
-      console.error(message)
-      break
-    case 'warn':
-      console.warn(message)
-      break
+function log(message: string, type: LogType = 'log') {
+  const logMethods: Record<LogType, (msg: string) => void> = {
+    log: console.log,
+    error: console.error,
+    warn: console.warn,
+    OSC: console.log,
+    MIDI: console.log,
   }
+
+  const logMethod = logMethods[type] || console.log
+  logMethod(`[${type}] ${message}`)
+
   io.emit('log', message, type)
 }
 
@@ -86,12 +83,12 @@ function setStartOnBoot(enable: boolean) {
   if (enable) {
     svc.on('install', () => {
       svc.start()
-      console.log('SmartOSC service installed')
+      log('SmartOSC service installed')
     })
     svc.install()
   } else {
     svc.on('uninstall', () => {
-      console.log('SmartOSC service uninstalled')
+      log('SmartOSC service uninstalled')
     })
     svc.uninstall()
   }

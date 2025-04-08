@@ -30,7 +30,6 @@ function setupSocketHandlers() {
     log('Client connected.')
 
     socket.on('fp-create', (name?: string, numFGs?: number, numFs?: number) => {
-      log(`Creating fader profile with name: ${name}`)
       config.app.faderProfileId = createFaderProfile(name, numFGs, numFs).id
       emitFaderProfiles()
       emitConfig()
@@ -61,18 +60,15 @@ function setupSocketHandlers() {
     })
 
     socket.on('fps-get', () => {
-      log('Getting fader profiles...')
       emitFaderProfiles()
     })
 
     socket.on('fgs-fs-init', () => {
-      log('Initializing fader groups and faders...')
       emitFaderGroups()
       emitFaders()
     })
 
     socket.on('fg-create', callback => {
-      log('Creating fader group...')
       const newGroup = createFaderGroup()
       callback(newGroup)
     })
@@ -104,7 +100,6 @@ function setupSocketHandlers() {
     })
 
     socket.on('f-create', (groupId?: Id) => {
-      log(`Creating fader in group ID: ${groupId}`)
       setFaders(fs => [
         ...fs,
         createFader(
@@ -135,7 +130,6 @@ function setupSocketHandlers() {
     })
 
     socket.on('f-update-value', (id: Id, value: number) => {
-      log(`Updating fader value for ID: ${id}, new value: ${value}`)
       setFaders(fs =>
         fs.map(fader => {
           if (fader.id !== id) return fader
@@ -146,22 +140,18 @@ function setupSocketHandlers() {
     })
 
     socket.on('fgs-update', (faderGroups: FaderGroup[]) => {
-      log(`Updating fader groups: ${JSON.stringify(faderGroups)}`)
       setFaderGroups(faderGroups)
     })
 
     socket.on('fs-update', (faders: Fader[]) => {
-      log(`Updating faders: ${JSON.stringify(faders)}`)
       setFaders(faders)
     })
 
     socket.on('c-get', callback => {
-      log('Getting config...')
       callback(config)
     })
 
     socket.on('midi-ds-get', callback => {
-      log('Getting MIDI devices...')
       const dvs = getInputs()
       log(`Midi devices: ${dvs}`)
       callback(dvs)
@@ -174,7 +164,6 @@ function setupSocketHandlers() {
     })
 
     socket.on('midi-in', () => {
-      log('Toggling MIDI input...')
       config.midi.input = !config.midi.input
       initializeMidiInput()
       emitConfig()
@@ -199,14 +188,12 @@ function setupSocketHandlers() {
     })
 
     socket.on('osc-in', () => {
-      log('Toggling OSC input...')
       config.tcp.input = !config.tcp.input
       initializeOSCSocket()
       emitConfig()
     })
 
     socket.on('osc-out', () => {
-      log('Toggling OSC output...')
       config.tcp.output = !config.tcp.output
       initializeOSCSocket()
       emitConfig()
@@ -219,14 +206,12 @@ function setupSocketHandlers() {
     })
 
     socket.on('app-autostart', () => {
-      log('Toggling app autostart...')
       config.app.autostart = !config.app.autostart
       setStartOnBoot(config.app.autostart)
       emitConfig()
     })
 
     socket.on('app-autostart-ui', () => {
-      log('Toggling app autostart UI...')
       config.app.autostartUI = !config.app.autostartUI
       emitConfig()
     })
@@ -242,7 +227,6 @@ function setupSocketHandlers() {
       socket.emit('midi-connection', midiInput !== null)
     })
   })
-  log('Socket handlers setup complete.')
 }
 
 export { setupSocketHandlers }

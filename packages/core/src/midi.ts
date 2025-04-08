@@ -106,6 +106,7 @@ function changeMidiDevice(device: string) {
 }
 
 function initializeMidiInput() {
+  log('Initializing MIDI input...')
   if (config.midi.input && !midiInput) {
     openMidiInput(config.midi.device)
   } else if (!config.midi.input && midiInput) {

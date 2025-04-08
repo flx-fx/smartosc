@@ -46,7 +46,6 @@ function Console() {
             switch (log.type) {
               case undefined:
               case 'log':
-              case 'info':
                 style = 'hidden'
                 break
               case 'error':
@@ -62,7 +61,7 @@ function Console() {
                 style = 'bg-green-600 text-green-100'
             }
             return (
-              <div className="flex gap-1 font-mono">
+              <div key={log.id} className="flex h-fit gap-1 font-mono">
                 <div className="text-muted-foreground box-border w-fit rounded-sm border border-dashed px-1 py-0.5">
                   {new Date(log.time).toLocaleTimeString([], {
                     hour: '2-digit',
@@ -71,7 +70,7 @@ function Console() {
                     hour12: false,
                   })}
                 </div>
-                <div key={log.id} className="bg-secondary text-secondary-foreground w-fit rounded-sm">
+                <div className="bg-secondary text-secondary-foreground h-fit w-fit rounded-sm">
                   <span className={cn('inline-flex rounded-sm px-1 py-0.5 font-medium', style)}>
                     {log.type && log.type.charAt(0).toUpperCase() + log.type.slice(1)}
                   </span>
