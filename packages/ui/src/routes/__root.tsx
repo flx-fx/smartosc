@@ -1,7 +1,7 @@
 import { createRootRoute, Link, Outlet, useLocation } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ModeToggle } from '@/components/mode-toggle.tsx'
-import { Home, Settings, SlidersVertical, Terminal } from 'lucide-react'
+import { CircleX, Home, Settings, SlidersVertical, Terminal } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
@@ -11,6 +11,9 @@ import { socket } from '@/socket.ts'
 import ConnectionState from '@/components/connection-state.tsx'
 import ErrorToast, { Toaster } from '@/components/ui/sonner.tsx'
 import { toast } from 'sonner'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx'
+import { useConnection } from '@/lib/useConnection.ts'
+import { useConfig } from '@/lib/useConfig.ts'
 
 export const Route = createRootRoute({
   component: Root,
@@ -18,6 +21,8 @@ export const Route = createRootRoute({
 
 function Root() {
   const location = useLocation()
+  const { socketConnection } = useConnection()
+  const config = useConfig()
 
   useEffect(() => {
     function onErrorToast(error: Error) {
@@ -29,7 +34,7 @@ function Root() {
     }
 
     socket.on('t-error', onErrorToast)
-    socket.on('exit', () => window.open('', '_self', '').close())
+    socket.on('exit', () => window.open('', '_self', '')?.close())
 
     return () => {
       socket.off('t-error', onErrorToast)
@@ -111,7 +116,32 @@ function Root() {
               <ModeToggle />
             </div>
           </nav>
-          <main className="grow">
+          <main className="h-[calc(100dvh-var(--spacing)*15)] grow">
+            {!socketConnection ? (
+              <div className="bg-background/50 absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center p-8 backdrop-blur-lg">
+                <Alert
+                  variant="destructive"
+                  className="w-192 min-w-fit max-w-full border-rose-500 bg-rose-500/20 text-rose-500"
+                >
+                  <CircleX className="h-4 w-4" />
+                  <AlertTitle>SmartOSC server not connected</AlertTitle>
+                  <AlertDescription>Please ensure SmartOSC Server is running.</AlertDescription>
+                </Alert>
+              </div>
+            ) : (
+              !config && (
+                <div className="bg-background/50 absolute left-0 top-0 z-40 flex h-full w-full items-center justify-center p-8 backdrop-blur-lg">
+                  <Alert
+                    variant="destructive"
+                    className="w-192 min-w-fit max-w-full border-rose-500 bg-rose-500/20 text-rose-500"
+                  >
+                    <CircleX className="h-4 w-4" />
+                    <AlertTitle>Config error:</AlertTitle>
+                    <AlertDescription>{config ? config : 'Config not defined.'}</AlertDescription>
+                  </Alert>
+                </div>
+              )
+            )}
             <Outlet />
           </main>
         </div>

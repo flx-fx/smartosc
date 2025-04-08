@@ -16,8 +16,6 @@ export const Route = createFileRoute('/settings')({
 
 function Settings() {
   const config = useConfig()
-  console.log('Render')
-
   const [midiDevices, setMidiDevices] = useState<string[]>([])
 
   const appRef = useRef<HTMLDivElement>(null)
@@ -34,10 +32,8 @@ function Settings() {
     updateMidiDevices()
   }, [])
 
-  if (!config) return <>Config Error: {config}</>
-
   return (
-    <div className="flex h-[calc(100dvh-var(--spacing)*15)]">
+    <div className="relative flex h-[calc(100dvh-var(--spacing)*15)]">
       <ScrollArea className="h-full w-full">
         <div className="flex w-full items-center justify-center">
           <div className="*:max-w-192 min-w-144 w-1/2 space-y-8 p-16 *:w-full">
@@ -46,16 +42,16 @@ function Settings() {
               <div className="space-y-2 p-4">
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   Start SmartOSC on system boot
-                  <Switch checked={config.app.autostart} onClick={() => socket.emit('app-autostart')} />
+                  <Switch checked={config?.app.autostart} onClick={() => socket.emit('app-autostart')} />
                 </div>
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   Open SmartOSC UI on application start
-                  <Switch checked={config.app.autostartUI} onClick={() => socket.emit('app-autostart-ui')} />
+                  <Switch checked={config?.app.autostartUI} onClick={() => socket.emit('app-autostart-ui')} />
                 </div>
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   Default Fader Mode
                   <Select
-                    value={config.app.defaultFaderMode}
+                    value={config?.app.defaultFaderMode}
                     onValueChange={value => socket.emit('app-default-fader-mode', value)}
                   >
                     <SelectTrigger>
@@ -77,7 +73,7 @@ function Settings() {
                   MIDI input
                   <Switch
                     disabled={midiDevices.length <= 0}
-                    checked={config.midi.input}
+                    checked={config?.midi.input}
                     onClick={() => socket.emit('midi-in')}
                   />
                 </div>
@@ -86,7 +82,7 @@ function Settings() {
                   <Input
                     className="w-1/6 min-w-16"
                     type="number"
-                    value={config.midi.channel}
+                    value={config?.midi.channel}
                     onChange={e => socket.emit('midi-chan', parseInt(e.target.value))}
                   />
                 </div>
@@ -101,13 +97,13 @@ function Settings() {
                         {midiDevices.length ? (
                           midiDevices.map(midiDevice => (
                             <Button
-                              className={`flex w-full justify-start gap-2 rounded-[calc(var(--ds-radius)-var(--ds-padding))] p-2 transition-colors ${midiDevice === config.midi.device ? 'border border-green-500 bg-green-500/10 text-green-500 hover:bg-green-500/20' : ''}`}
+                              className={`flex w-full justify-start gap-2 rounded-[calc(var(--ds-radius)-var(--ds-padding))] p-2 transition-colors ${midiDevice === config?.midi.device ? 'border border-green-500 bg-green-500/10 text-green-500 hover:bg-green-500/20' : ''}`}
                               variant="outline"
                               size="lg"
                               key={midiDevice}
                               onClick={() => socket.emit('midi-d', midiDevice)}
                             >
-                              <div className={midiDevice !== config.midi.device ? 'invisible' : ''}>
+                              <div className={midiDevice !== config?.midi.device ? 'invisible' : ''}>
                                 <LucideCheck />
                               </div>
                               <div className="">{midiDevice}</div>
@@ -147,11 +143,11 @@ function Settings() {
                 <div className="rounded-2xl border font-semibold">
                   <div className="flex items-center justify-between border-b border-dashed p-6">
                     OSC input
-                    <Switch checked={config.tcp.input} onClick={() => socket.emit('osc-in')} />
+                    <Switch checked={config?.tcp.input} onClick={() => socket.emit('osc-in')} />
                   </div>
                   <div className="flex items-center justify-between p-6">
                     OSC output
-                    <Switch checked={config.tcp.output} onClick={() => socket.emit('osc-out')} />
+                    <Switch checked={config?.tcp.output} onClick={() => socket.emit('osc-out')} />
                   </div>
                 </div>
                 <div className="space-y-2 rounded-2xl border p-6 font-semibold">
@@ -162,7 +158,7 @@ function Settings() {
                         className="w-3/4 min-w-48"
                         type="text"
                         placeholder="Address"
-                        value={config.tcp.localAddress}
+                        value={config?.tcp.localAddress}
                         onChange={e => socket.emit('tcp-address', e.target.value)}
                       />
                       <p>:</p>
@@ -170,7 +166,7 @@ function Settings() {
                         className="w-1/4"
                         type="number"
                         placeholder="Port"
-                        value={config.tcp.localPort}
+                        value={config?.tcp.localPort}
                         onChange={e => socket.emit('tcp-port', parseInt(e.target.value))}
                       />
                     </div>
