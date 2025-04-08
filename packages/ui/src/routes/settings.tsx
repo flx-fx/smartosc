@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
-import { LucideCheck, RefreshCcw, TriangleAlert } from 'lucide-react'
+import { ArrowRight, LucideCheck, RefreshCcw, TriangleAlert } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { socket } from '@/socket.ts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx'
@@ -80,7 +80,13 @@ function Settings() {
               </div>
             </div>
             <div ref={midiRef}>
-              <h2 className="text-2xl font-bold">MIDI</h2>
+              <span className="flex items-end">
+                <h2 className="text-2xl font-bold">MIDI</h2>
+                <p className="text-muted-foreground inline-flex items-center">
+                  <ArrowRight className="h-4" />
+                  ETC SmartFade
+                </p>
+              </span>
               <div className="space-y-2 p-4">
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   MIDI input
@@ -154,7 +160,13 @@ function Settings() {
               </div>
             </div>
             <div ref={oscRef}>
-              <h2 className="text-2xl font-bold">ETC EOS connection (TCP)</h2>
+              <span className="flex items-end">
+                <h2 className="text-2xl font-bold">OSC</h2>
+                <p className="text-muted-foreground inline-flex items-center">
+                  <ArrowRight className="h-4" />
+                  ETC EOS (TCP v1.1)
+                </p>
+              </span>
               <div className="space-y-2 p-4">
                 <div className="rounded-2xl border font-semibold">
                   <div className="flex items-center justify-between border-b border-dashed p-6">

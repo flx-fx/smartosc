@@ -12,7 +12,7 @@ function Index() {
     <div className="flex h-full items-center justify-center p-2">
       <Card className="border-dashed">
         <CardHeader>
-          <CardTitle>Welcome to SmartOSC!</CardTitle>
+          <CardTitle className="text-2xl font-black">Welcome to SmartOSC!</CardTitle>
           <CardDescription>Use your ETC SmartFade Series console as a fader wing for ETC EOS.</CardDescription>
         </CardHeader>
         <CardContent className="mx-4 overflow-hidden rounded-lg border p-0">
