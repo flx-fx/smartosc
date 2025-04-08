@@ -212,6 +212,12 @@ function setupSocketHandlers() {
       emitConfig()
     })
 
+    socket.on('app-theme', theme => {
+      log(`Updating theme: ${theme}`)
+      config.app.theme = theme
+      emitConfig()
+    })
+
     socket.on('app-autostart', () => {
       log('Toggling app autostart...')
       config.app.autostart = !config.app.autostart

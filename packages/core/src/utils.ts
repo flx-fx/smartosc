@@ -6,6 +6,10 @@ import { Service } from 'node-windows'
 import path from 'path'
 import { faderProfiles, getFaderGroups, getFaders, setFaderGroups, setFaders } from './fader-profiles.js'
 import open from 'open'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 function log(message: string, type?: LogType) {
   switch (type) {
