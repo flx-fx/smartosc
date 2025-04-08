@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input.tsx'
 import { ScrollArea } from '@/components/ui/scroll-area.tsx'
 import { useConfig } from '@/lib/useConfig.ts'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
+import { ThemeToggle } from '@/components/theme-toggle.tsx'
 
 export const Route = createFileRoute('/settings')({
   component: Settings,
@@ -41,12 +42,24 @@ function Settings() {
               <h2 className="text-2xl font-bold">App</h2>
               <div className="space-y-2 p-4">
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
+                  Theme
+                  <ThemeToggle />
+                </div>
+                <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   Start SmartOSC on system boot
-                  <Switch checked={config?.app.autostart} onClick={() => socket.emit('app-autostart')} />
+                  <Switch
+                    checked={config?.app.autostart ?? false}
+                    disabled={!config}
+                    onClick={() => socket.emit('app-autostart')}
+                  />
                 </div>
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   Open SmartOSC UI on application start
-                  <Switch checked={config?.app.autostartUI} onClick={() => socket.emit('app-autostart-ui')} />
+                  <Switch
+                    checked={config?.app.autostartUI ?? false}
+                    disabled={!config}
+                    onClick={() => socket.emit('app-autostart-ui')}
+                  />
                 </div>
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   Default Fader Mode
@@ -72,8 +85,8 @@ function Settings() {
                 <div className="flex items-center justify-between rounded-2xl border p-6 font-semibold">
                   MIDI input
                   <Switch
-                    disabled={midiDevices.length <= 0}
-                    checked={config?.midi.input}
+                    disabled={midiDevices.length <= 0 || !config}
+                    checked={config?.midi.input ?? false}
                     onClick={() => socket.emit('midi-in')}
                   />
                 </div>
@@ -82,7 +95,8 @@ function Settings() {
                   <Input
                     className="w-1/6 min-w-16"
                     type="number"
-                    value={config?.midi.channel}
+                    disabled={!config}
+                    value={config?.midi.channel ?? ''}
                     onChange={e => socket.emit('midi-chan', parseInt(e.target.value))}
                   />
                 </div>
@@ -101,6 +115,7 @@ function Settings() {
                               variant="outline"
                               size="lg"
                               key={midiDevice}
+                              disabled={!config}
                               onClick={() => socket.emit('midi-d', midiDevice)}
                             >
                               <div className={midiDevice !== config?.midi.device ? 'invisible' : ''}>
@@ -114,6 +129,7 @@ function Settings() {
                             <TriangleAlert /> No MIDI devices found.
                             <Button
                               size="sm"
+                              disabled={!config}
                               className="focus-visible:ring-bg-yellow-500/20 dark:focus-visible:ring-bg-yellow-500/40 ml-auto bg-yellow-500 hover:bg-yellow-500/90"
                               onClick={() => updateMidiDevices()}
                             >
@@ -127,7 +143,7 @@ function Settings() {
                           <p className="text-muted-foreground ml-2 text-sm">
                             Your device doesn't show up? Try refreshing.
                           </p>
-                          <Button variant="outline" size="icon" onClick={() => updateMidiDevices()}>
+                          <Button variant="outline" size="icon" disabled={!config} onClick={() => updateMidiDevices()}>
                             <RefreshCcw />
                           </Button>
                         </div>
@@ -143,11 +159,19 @@ function Settings() {
                 <div className="rounded-2xl border font-semibold">
                   <div className="flex items-center justify-between border-b border-dashed p-6">
                     OSC input
-                    <Switch checked={config?.tcp.input} onClick={() => socket.emit('osc-in')} />
+                    <Switch
+                      checked={config?.tcp.input ?? false}
+                      disabled={!config}
+                      onClick={() => socket.emit('osc-in')}
+                    />
                   </div>
                   <div className="flex items-center justify-between p-6">
                     OSC output
-                    <Switch checked={config?.tcp.output} onClick={() => socket.emit('osc-out')} />
+                    <Switch
+                      checked={config?.tcp.output ?? false}
+                      disabled={!config}
+                      onClick={() => socket.emit('osc-out')}
+                    />
                   </div>
                 </div>
                 <div className="space-y-2 rounded-2xl border p-6 font-semibold">
@@ -158,7 +182,8 @@ function Settings() {
                         className="w-3/4 min-w-48"
                         type="text"
                         placeholder="Address"
-                        value={config?.tcp.localAddress}
+                        value={config?.tcp.localAddress ?? ''}
+                        disabled={!config}
                         onChange={e => socket.emit('tcp-address', e.target.value)}
                       />
                       <p>:</p>
@@ -166,7 +191,8 @@ function Settings() {
                         className="w-1/4"
                         type="number"
                         placeholder="Port"
-                        value={config?.tcp.localPort}
+                        value={config?.tcp.localPort ?? ''}
+                        disabled={!config}
                         onChange={e => socket.emit('tcp-port', parseInt(e.target.value))}
                       />
                     </div>

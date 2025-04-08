@@ -24,6 +24,7 @@ export type Fader = {
 export type Config = {
   app: {
     faderProfileId: Id
+    theme?: Theme
     autostart?: boolean
     autostartUI?: boolean
     defaultFaderMode: FaderMode
@@ -49,6 +50,8 @@ export type FaderProfile = {
 }
 
 export type LogType = 'log' | 'info' | 'warn' | 'error' | 'TCP' | 'MIDI'
+
+export type Theme = 'dark' | 'light' | 'system'
 
 export type Log = {
   id: Id

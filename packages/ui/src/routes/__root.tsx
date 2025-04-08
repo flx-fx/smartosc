@@ -1,10 +1,9 @@
 import { createRootRoute, Link, Outlet, useLocation } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { ModeToggle } from '@/components/mode-toggle.tsx'
+import { ThemeToggle } from '@/components/theme-toggle.tsx'
 import { CircleX, Home, Settings, SlidersVertical, Terminal } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb.tsx'
-import { ThemeProvider } from '@/components/theme-provider.tsx'
+import { ThemeProvider, useTheme } from '@/components/theme-provider.tsx'
 import React, { useEffect } from 'react'
 import { getId } from '@/lib/utils.ts'
 import { socket } from '@/socket.ts'
@@ -23,6 +22,7 @@ function Root() {
   const location = useLocation()
   const { socketConnection } = useConnection()
   const config = useConfig()
+  const { setTheme } = useTheme()
 
   useEffect(() => {
     function onErrorToast(error: Error) {
@@ -40,6 +40,10 @@ function Root() {
       socket.off('t-error', onErrorToast)
     }
   }, [])
+
+  useEffect(() => {
+    setTheme(config?.app.theme ? config.app.theme : 'system')
+  }, [config])
 
   return (
     <ThemeProvider>
@@ -113,7 +117,7 @@ function Root() {
             </ul>
 
             <div className="mt-auto">
-              <ModeToggle />
+              <ThemeToggle />
             </div>
           </nav>
           <main className="h-[calc(100dvh-var(--spacing)*15)] grow">
@@ -146,7 +150,6 @@ function Root() {
           </main>
         </div>
       </div>
-      <TanStackRouterDevtools position="bottom-right" />
     </ThemeProvider>
   )
 }
