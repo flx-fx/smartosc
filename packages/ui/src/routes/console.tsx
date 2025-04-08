@@ -54,7 +54,7 @@ function Console() {
               case 'warn':
                 style = 'bg-yellow-500 text-black'
                 break
-              case 'TCP':
+              case 'OSC':
                 style = 'bg-blue-600 text-blue-100'
                 break
               case 'MIDI':
