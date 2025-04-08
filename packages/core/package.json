@@ -5,10 +5,9 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsc --watch",
+    "dev": "tsc && cross-env NODE_ENV=development node ./dist/core/src/index.js",
     "build": "tsc",
-    "build-start": "tsc && node ./dist/core/src/index.js",
-    "start": "node ./dist/core/src/index.js"
+    "start": "cross-env NODE_ENV=production node ./dist/core/src/index.js"
   },
   "keywords": [],
   "author": "",

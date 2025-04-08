@@ -31,7 +31,12 @@ function initializeServer() {
     res.sendFile(path.join(__dirname, '../../../../ui/dist', 'index.html'))
   })
 
-  server.listen(5000, () => {
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  const port = isDevelopment ? 5000 : 0
+
+  console.log(process.env.NODE_ENV)
+
+  server.listen(port, () => {
     const address = server.address()
     if (address && typeof address !== 'string') {
       serverUrl = `http://localhost:${address.port}`
